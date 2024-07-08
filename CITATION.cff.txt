@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Kutzer"
+  given-names: "Michael"
+  orcid: "https://orcid.org/0000-0001-8246-2409"
+- family-names: "Civetta"
+  given-names: "Chris"
+title: "ProbabilisticMultiview"
+version: 1.0
+# doi: XX.XXXX/zenodo.XXX
+date-released: 2024-07-08
+url: "https://github.com/ccivetta/ProbabilisticMultiview"
