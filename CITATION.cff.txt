@@ -8,6 +8,6 @@ authors:
   given-names: "Chris"
 title: "ProbabilisticMultiview"
 version: 1.0
-# doi: XX.XXXX/zenodo.XXX
+doi: 10.5281/zenodo.12687356
 date-released: 2024-07-08
 url: "https://github.com/ccivetta/ProbabilisticMultiview"
