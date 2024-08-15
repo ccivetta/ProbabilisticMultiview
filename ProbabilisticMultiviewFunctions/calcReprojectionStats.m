@@ -28,10 +28,18 @@ function [d_mean,d_median, d_max, d_min, d_std, d_cov] = calcReprojectionStats(d
 %                          reprojected points 
 %       d_cov            - the covariance of euclidean distance between detected and
 %                          reprojected points 
- 
-
+%
+% TODO: 
+%       - Update to display error message when full checkerboard not
+%         detected for other sizes 
+%
+%
 % C. A. Civetta, M. Kutzer, 16OCT2023, USNA
 
+if length(detectedPoints(:,1)) ~= 56
+    disp('Full checkerboard not detected');
+    return;
+end
 
 for i=1:length(detectedPoints(:,1))
     d(i) = sqrt(((detectedPoints(i,1)-repPoints(i,1))^2)+((detectedPoints(i,2)-repPoints(i,2))^2));

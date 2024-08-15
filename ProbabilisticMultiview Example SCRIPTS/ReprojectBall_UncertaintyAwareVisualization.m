@@ -45,8 +45,7 @@ load('SavedMatrices\H_b2c.mat')
 load('SavedMatrices\H_f2g.mat')
 load('SavedMatrices\H_c12c2_MoCap.mat')
 load('SavedMatrices\H_c12c2_mean.mat')
-load('RodCalibration 07 Feb 2023.mat')
-load('Red Ball Center 18 Oct 2023.mat')
+load('Red Ball Center 09 Aug 2024.mat')
 for i=1:2
     A_c2m{i} = params{i}.Intrinsics.IntrinsicMatrix';
 end
@@ -163,9 +162,12 @@ p_tilde_rb_center_mocap(:,1) = Proj_rb2m*p_rb_center;
 % vision determined pixel location.
 p_rb_center_mocap = [p_tilde_rb_center_mocap(1,1)./p_tilde_rb_center_mocap(3,1) p_tilde_rb_center_mocap(2,1)./p_tilde_rb_center_mocap(3,1)];
 
-center_mocap_m = plot(axs,0, 0, 'xg','MarkerSize',15,'LineWidth',3);
+center_mocap_m = plot(axs,0, 0, 'xm','MarkerSize',15,'LineWidth',3);
 set(center_mocap_m, 'XData', p_rb_center_mocap(1), 'YData', p_rb_center_mocap(2), 'Visible', 'on')
 
 %% Add Legend
 legend([ellipsoidPoints(1), ellipsoidPoints(2), ellipsoidPoints(3), center_mocap_m, center_cv, center], ...
-         {'95% Confidence Interval', '50% Confidence Interval', '5% Confidence Interval', 'Ground Truth', 'Computer Vision Estimate', 'Sample Estimate'});
+         {'95% Confidence Interval', '50% Confidence Interval', '5% Confidence Interval', 'MoCap Ground Truth', 'Computer Vision Estimate', 'Sample Estimate'});
+
+%legend([ellipsoidPoints(1), ellipsoidPoints(2), ellipsoidPoints(3), center_mocap_m], ...
+         %{'95% Confidence Interval', '50% Confidence Interval', '5% Confidence Interval', 'MoCap Ground Truth'});

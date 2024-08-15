@@ -29,16 +29,22 @@ function [A_c2m] = estimateIntrinsicMatrix(boardSize, squareSize, imageFolder, v
 %   C. A. Civetta, M. Kutzer, 28Jun2024, USNA
 warning off; 
 
-if nargin ~= 4
-    disp('Incorrect number of arguments, 4 required');
+if nargin < 4
+    disp('Incorrect number of arguments, 4 minimum');
     return;
 end 
 
-if isa(varargin, 'cameraParameters')
+if isa(varargin{1}, 'cameraParameters')
     H_g2c = generateExtrinsics(varargin);
 else 
     H_g2c = cell(1, length(varargin{1}));
     H_g2c = varargin{1};
+end 
+
+if nargin == 5 && varargin{2}
+    plot = true; 
+else 
+    plot = false;
 end 
 
 images = imageSet(imageFolder);
@@ -77,6 +83,7 @@ for n=1:length(imageFileNames)
 end
 
 %% Plot images to check correspondance 
+if plot
 fig = figure('Name','ReprojectPoints.m');
 axs = axes;
 for i=1:length(H_g2c)
@@ -89,5 +96,6 @@ for i=1:length(H_g2c)
         plot(axs,X_m_rep{i}(1,:), X_m_rep{i}(2,:), 'go','MarkerSize',3,'LineWidth',1);
         disp('Press spacebar for next image');
         pause();
+end
 end
 end

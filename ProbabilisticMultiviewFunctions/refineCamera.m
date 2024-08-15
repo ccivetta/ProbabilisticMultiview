@@ -69,6 +69,7 @@ A_c2m_new(3,:) = [0 0 1];
 
 %Convert params to struct to allow for changes
 holder = toStruct(params{2});
+holder = rmfield(holder, 'K');
 holder.IntrinsicMatrix = A_c2m_new.';
 
 %Convert struct back to cameraParameters with new Intrinsics

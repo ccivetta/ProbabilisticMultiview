@@ -57,12 +57,19 @@ for i = 1:numel(A_c2m)
     x0 = A_c2m{i}(1,3);
     y0 = A_c2m{i}(2,3);
 
-    xx = [x0, x0+sx, x0+fx+sx, x0+fx].';
-    yy = [y0, y0+fy, y0+fy, y0].';
+    xx{i} = [x0, x0+sx, x0+fx+sx, x0+fx].';
+    yy{i} = [y0, y0+fy, y0+fy, y0].';
+    a(i) = polyarea(xx{i},yy{i});
+end
 
-    vertices{i} = [xx,yy];
+
+
+for i = 1:numel(A_c2m)
+    [~,indexOfMin] = min(a);
+    vertices{i} = [xx{indexOfMin},yy{indexOfMin}];
     intrinsicPoly{i} = plot(polyshape(vertices{i}),...
-        'Parent',axs,'FaceAlpha',0.2,'EdgeColor','k');
+        'Parent',axs,'FaceAlpha',0.75,'EdgeColor','k');
+    a(indexOfMin) = [];
 end
 
 end

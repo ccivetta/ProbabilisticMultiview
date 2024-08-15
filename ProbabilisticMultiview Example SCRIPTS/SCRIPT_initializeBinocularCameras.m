@@ -28,12 +28,12 @@ for i = 1:2
         camU6.Exposure = -5;
         camU6.ExposureMode = "manual";
         camU6.FrameRate = "30.0000";
-        camU6.Gain = 138;
+        camU6.Gain = 219;
         camU6.GainMode = "manual";
         camU6.Gamma = 100;
         camU6.Hue = 0;
         camU6.Saturation = 72;
-        camU6.Sharpness = 5;
+        camU6.Sharpness = 8;
         camU6.WhiteBalance = 6500;
         camU6.WhiteBalanceMode = "auto";
         start(cam(i));
@@ -47,10 +47,10 @@ for i = 1:2
         camUM.FrameRate = "30.0000";
         camUM.Gain = 32;
         camUM.GainMode = "manual";
-        camUM.Gamma = 70;
+        camUM.Gamma = 65;
         camUM.Hue = 0;
         camUM.Saturation = 64;
-        camUM.Sharpness = 3;
+        camUM.Sharpness = 10;
         camUM.WhiteBalance = 6500;
         camUM.WhiteBalanceMode = "auto";
         start(cam(i));

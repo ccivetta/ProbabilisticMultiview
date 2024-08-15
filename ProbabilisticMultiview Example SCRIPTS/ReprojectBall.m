@@ -33,8 +33,7 @@ clear bubble
 load('SavedMatrices\H_b2c.mat')
 load('SavedMatrices\H_f2g.mat')
 
-load('RodCalibration 07 Feb 2023.mat')
-load('Red Ball Center 18 Oct 2023.mat') 
+load('Red Ball Center 09 Aug 2024.mat')
 
 for i=1:2
     A_c2m{i} = params{i}.Intrinsics.IntrinsicMatrix';

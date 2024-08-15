@@ -70,10 +70,11 @@ index = '1';
 squareSizeMM = 30;
 
 % Number of correlation images to take
-numImages = 30;
+numImages = 18; % Based on UR program
 %% Initiate OptiTrack + UR
-v = initOptitrack({'Bino', 'BinocularCameras'}, {'RedBall', 'RedBall'}, {'Check', 'NiceCheckerboard'});
-%ura = URx_ROS('ura');
+v = initOptitrack({'Bino', 'BinocularCameras'}, {'RedBall', 'RedBall'}, {'Check', 'NiceCheckerboard'}, {'Base', 'UR10Base'});
+ur = urRTDEClient('10.0.0.100');
+load('URJoingAngles_calibration.mat');
 %% Initiate Camera
 SCRIPT_initializeBinocularCameras
 for i=1:2
@@ -87,14 +88,18 @@ end
 
 %% Gather images/mocap data
 disp("Begin Taking Images/MoCap Data")
-binocularDisplay = figure;
-for k=1:numImages
-    %Loop to display both images until a key is pressed, at which point the
-    %loop breaks and the image data is saved for use in calibration
-    img = binocularCaptureDisplay(prv, binocularDisplay);
+%binocularDisplay = figure;
+for k=1:1:size(q,1)
+    %img = binocularCaptureDisplay(prv, binocularDisplay); USE THIS IF
+    %TAKING IMAGES  MANUALLY
 
+    ur.sendJointConfigurationAndWait(q(k,:),...
+        'EndTime',3.0,'Velocity',2*pi,'Acceleration',4*pi);
+    pause(1);
+        
     % Save image
     for i=1:2
+        img{i} = prv(i).CData;
         imwrite(img{i}, ['CorrelationImages\' camSaveName{i} '\CorImage' num2str(k,'%03.f') '.jpg'])
     end
     fprintf("Saved Image %d of %d \n",k, numImages)
@@ -103,10 +108,9 @@ for k=1:numImages
     H_f2w{k} = v.Check.pose; %Saving Checkerboard Fiducial in m
     H_b2w{k} = v.Bino.pose; %Saving Bino Fiducial in m
     H_o2w{k} = v.Base.pose; %Saving base frame fidicual in m
-    %urJointAngles{k} = ura.jointAngles;
 end
 disp("End of Image Gathering")
-close(binocularDisplay);
+%close(binocularDisplay);
 
 %% Remove bad data
 %Check all images for imagepoints and save the image number for any images
@@ -147,14 +151,14 @@ for j=length(bad):-1:1
     H_b2w(bad(j)) = [];
     H_f2w(bad(j)) = [];
     H_o2w(bad(j)) = [];
-    %urJointAngles(bad(j)) = [];
+
+    
 end
 
 %Save adjusted data -> this is saves in m 
 save('SavedMatrices\H_f2w.mat',"H_f2w");
 save('SavedMatrices\H_b2w.mat',"H_b2w");
 save('SavedMatrices\H_o2w.mat',"H_o2w");
-%save('SavedMatrices\urJointAngles.mat',"urJointAngles");
 disp('Bad data removed');
 disp(bad);
 
@@ -178,9 +182,9 @@ for i=1:2
     I = readimage(images, 1);
     imageSize = [size(I,1), size(I,2)];
     [params{i}, imagesUsed{i}, estimationErrors{i}] = estimateCameraParameters(imagePoints{i}, worldPoints{i}, ...
-    'EstimateSkew', false, 'EstimateTangentialDistortion', false, ...
+    'EstimateSkew', true, 'EstimateTangentialDistortion', false, ...
     'NumRadialDistortionCoefficients', 2, 'WorldUnits', 'millimeters', ...
-    'InitialIntrinsicMatrix', [], 'InitialRadialDistortion', [], 'ImageSize', imageSize);
+    'ImageSize', imageSize);
 end 
 disp("Cameras Calibrated")
 

@@ -1,4 +1,4 @@
-%% Digitize Red Ball
+                                                                   %% Digitize Red Ball
 % Script used to digitze the red ball center relative to the fixed red ball
 % MoCap fiducial
 %
@@ -13,13 +13,13 @@ close all
 clear all
 clc
 
-load 'RodCalibration 07 Feb 2023.mat'
+load 'RodCalibration 09 Aug 2024.mat'
 
 %% Connect to Optitrack
 v = initOptitrack({'Wand', 'DigitizingWand'}, {'RedBall', 'RedBall'});
 %% Take data
 index = 1;
-while(1)
+while(1) 
     disp('Press any key to define a point on the red ball rigid body')
     pause()
 
@@ -44,8 +44,8 @@ while(1)
 end
 
 %% Save points relative to red ball 
-save(['Digitized Points ' datestr(datetime('now'),'dd mmm yyyy') '.mat'], 'p_rb')
-save(['Digitized Points Wand Pose ' datestr(datetime('now'),'dd mmm yyyy') '.mat'], 'H_r2w')
+%save(['Digitized Points ' datestr(datetime('now'),'dd mmm yyyy') '.mat'], 'p_rb')
+%save(['Digitized Points Wand Pose ' datestr(datetime('now'),'dd mmm yyyy') '.mat'], 'H_r2w')
 
 
 %% Fit red ball points to a sphere
@@ -66,7 +66,7 @@ axis equal
 title('Sphere Fit to Motion Tracked Points')
 
 p_rb_center = [sfit.Center(1);sfit.Center(2);sfit.Center(3)];
-save(['Red Ball Center ' datestr(datetime('now'),'dd mmm yyyy') '.mat'], 'p_rb_center')
+save(['Red Ball Front ' datestr(datetime('now'),'dd mmm yyyy') '.mat'], 'p_rb_center')
 
 
 

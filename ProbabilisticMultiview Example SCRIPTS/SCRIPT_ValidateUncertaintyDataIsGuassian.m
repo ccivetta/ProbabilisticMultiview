@@ -11,13 +11,10 @@ clear all
 load('ExtrinsicDataMatrices\H_c12c2_ex.mat');
 load('SavedMatrices\H_c12c2_mean.mat');
 load('ExtrinsicDataMatrices\H_c12c1_bar.mat');
+%load('SavedMatrices\H_c12c1_bar_all.mat')
 samples = numel(H_c12c1_bar);
 
 H_c12c2_mu = H_c12c2_mean;
-
-for i=1:samples
-    H_c12c2_zero{i} = invSE(H_c12c2_mu)*H_c12c2_ex{i};
-end
 
 v_c12c2_cov = covSE(H_c12c1_bar,eye(4));
 v_c12c2_mu = veeSE( logSE(meanSE(H_c12c1_bar)) );
@@ -50,6 +47,24 @@ for prcConfInterval = linspace(0.01,0.99,1000)
     ALL_prcConfInterval(end+1)        = prcConfInterval;
     ALL_prcConfInterval_Sample(end+1) = prcConfInterval_Sample;
 end
+%% Calc Convex Hull Volume
+efit = mvnpdfConfInterval(zeros(6,1),v_c12c2_cov,.99);
+[K,vol_ex] = convhulln(Xs_o);
+evol_ex = ellipsoidVolume(efit);
+%% Fit ellipsoid
+spherePoints = generateUnitHypersphere(1000, 3);
+efitTest = mvnpdfConfInterval(zeros(3,1), v_c12c2_cov(4:6,4:6), .5);
+%efitTest = mvnpdfConfInterval([mean(Xs_o(:,4)); mean(Xs_o(:,5)); mean(Xs_o(:,6))], v_c12c2_cov(4:6,4:6), .5);
+Xs_o_3D = Xs_o.';
+Xs_e = invSO(efitTest.Rotation)*(Xs_o_3D(4:6,:) - efitTest.Center);
+[M,o] = hyperellipsoidfit(Xs_o_3D(4:6,:),[],[], 'forceOrigin', true);
+points = bsxfun(@plus, (M(:,:,1)*spherePoints')', o(:,1)');
+[~,fit_vol] = convhulln(points);
+evol_ex = ellipsoidVolume(efitTest);
+plotEllipsoid(efitTest);
+hold on;
+plot3(Xs_o(:,4), Xs_o(:,5), Xs_o(:,6), '*m');
+plot3(points(:,1), points(:,2), points(:,3), 'ob');
 %% Plot Extrinsics
 figure;
 axs = axes;
@@ -120,6 +135,12 @@ for i=1:2
     end
 
 end
+%% Calc Convex Hull Volume
+for i=1:2
+    efit(i) = mvnpdfConfInterval(v_A_c2m_mu{i},v_A_c2m_cov{i},.99);
+    [~,vol_in(i)] = convhulln(Xs_o{i});
+    evol_in(i) = ellipsoidVolume(efit(i));
+end
 %% Plot Intrinsics
 colors = 'rg';
 figure;
@@ -162,11 +183,11 @@ for i=1:2
         efit(i) = mvnpdfConfInterval([mean_x_seg(i) mean_y_seg(i)],seg_cov{i},prcConfInterval);
 
         % Reference samples to mean and covariance
-        Xs_e = invSO(efit(i).Rotation)*(Xs_o{i}.' - efit(i).Center);
+        Xs_e{i} = invSO(efit(i).Rotation)*(Xs_o{i}.' - efit(i).Center);
 
         % Find all points inside the confidence interval
         tfIn = ...
-            sum(( Xs_e./repmat(efit(i).PrincipalRadii,1,samples) ).^2, 1) <= 1;
+            sum(( Xs_e{i}./repmat(efit(i).PrincipalRadii,1,samples) ).^2, 1) <= 1;
 
         prcConfInterval_Sample = nnz(tfIn)/numel(tfIn);
 
@@ -178,6 +199,20 @@ for i=1:2
         ALL_prcConfInterval_Sample{i}(end+1) = prcConfInterval_Sample;
     end
 
+end
+%% Calc Convex Hull Volume
+for i=1:2
+    efit(i) = mvnpdfConfInterval([mean_x_seg(i) mean_y_seg(i)],seg_cov{i},.99);
+    [~,vol_seg(i)] = convhulln(Xs_o{i});
+    evol_seg(i) = ellipsoidVolume(efit(i));
+end
+
+%% Fit ellipse
+spherePoints = generateUnitHypersphere(1000, 2).';
+for i=1:2
+    [M{i},o{i}] = hyperellipsoidfit(Xs_e{i}.', 'auto');
+    points{i} = (M{i}*spherePoints + o{i}).';
+    [~,fit_vol(i)] = convhulln(points{i});
 end
 
 %% Plot Segmentation
