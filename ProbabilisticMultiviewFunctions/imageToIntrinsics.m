@@ -47,7 +47,7 @@ if ~isempty(boardSize)
     if ~all(boardSize == boardSize_i,'all')
         warning('Partial detection: [%d,%d] detected, [%d,%d] expected.',...
             boardSize_i,boardSize);
-        A_c2m = [];
+        A_c2m_i = [];
         return
     end
 else
@@ -95,7 +95,7 @@ A_row1 = p_m(1,:) * pinv(tilde_p_c(1:3,:));
 A_row2 = p_m(2,:) * pinv(tilde_p_c(2:3,:));
 
 % Format properly
-A_c2m(1,:) = A_row1;
-A_c2m(2,1) = 0;
-A_c2m(2,2:3) = A_row2;
-A_c2m(3,:) = [0 0 1];
+A_c2m_i(1,:) = A_row1;
+A_c2m_i(2,1) = 0;
+A_c2m_i(2,2:3) = A_row2;
+A_c2m_i(3,:) = [0 0 1];
