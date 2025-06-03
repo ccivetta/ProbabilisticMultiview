@@ -1,16 +1,19 @@
-function [err,dp_m] = imageToReprojectionError(im,cameraParams,squareSize,boardSize,A_c2m)
-
+function [err,dp_m] = imageToReprojectionError(im,cameraParams,squareSize,varargin)
 
 
 %% Check input(s)
-narginchk(3,4);
+narginchk(4,5);
 
 if ~isa(cameraParams, 'cameraParameters')
     error('Camera parameters must be provided.');
 end
 
-if nargin < 4
+if nargin < 5
     boardSize = [];
+    A_c2m = varargin{1};
+else
+    boardSize = varargin{1};
+    A_c2m = varargin{2};
 end
 
 %% Calculate extrinsics from image
