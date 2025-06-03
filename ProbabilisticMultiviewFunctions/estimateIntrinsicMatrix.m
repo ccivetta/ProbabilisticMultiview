@@ -1,7 +1,8 @@
 function [A_c2m] = estimateIntrinsicMatrix(boardSize, squareSize, imageFolder, varargin)
-%ESTIMATEINTRINSICMATRIX Takes the board size and square size of the checkerboard grid, rigid body
-%transform defining the checkerboard grid relative to the camera, and an
-%image in order to estimate an intrinsic matrix 
+%ESTIMATEINTRINSICMATRIX Takes the board size and square size of the 
+% checkerboard grid, rigid body transform defining the checkerboard grid 
+% relative to the camera, and an image in order to estimate an intrinsic 
+% matrix 
 %   [A_c2m] = estimateIntrinsicMatrix(board, squareSize, imageFolder, params) estimates an
 %   intrinsic matrix for a camera given cameraParameters, square size, and images
 %   of the checkerboard. 
