@@ -98,8 +98,8 @@ p_f(3,:) = 0;               % <-- Define z-coordinate
 p_f(4,:) = 1;               % <-- Convert to homogeneous, 3D
 
 % Define p_c
-H_c2f = invSE(H_f2c);
-p_c = H_c2f*p_f;
+%H_c2f = invSE(H_f2c);
+p_c = H_f2c*p_f;
 
 %% Define scaled camera refereced points
 tilde_p_c = p_c(1:3,:) ./ p_c(3,:);
