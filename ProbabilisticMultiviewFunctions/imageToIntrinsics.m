@@ -6,7 +6,7 @@ function A_c2m_i = imageToIntrinsics(im,camaraParams,squareSize,boardSize)
 %   Input(s)
 %       im - MxNxK array defining image
 %       cameraParams - MATLAB camera parameters object
-%       squareSize - scalar defining know square size
+%       squareSize - scalar defining known square size
 %       boardSize - 1x2 array defining expected board size
 %
 %   Output(s)
