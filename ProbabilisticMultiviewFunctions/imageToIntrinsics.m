@@ -39,6 +39,9 @@ end
 %                                         pixel position
 [imagePoints,boardSize_i] = detectCheckerboardPoints(im);
 
+% Undistort image points
+imagePoints = undistortPoints(imagePoints,camaraParams);
+
 % Check for partial detection
 if ~isempty(boardSize)
     if ~all(boardSize == boardSize_i,'all')
@@ -88,8 +91,8 @@ p_c = H_c2f*p_f;
 tilde_p_c = p_c(1:3,:) ./ p_c(3,:);
 
 %% Calculate Intrinsics
-A_row1 = p_m_tilde(1,:) * pinv(p_c);
-A_row2 = p_m_tilde(2,:) * pinv(p_c(2:3,:));
+A_row1 = p_m(1,:) * pinv(tilde_p_c(1:3,:));
+A_row2 = p_m(2,:) * pinv(tilde_p_c(2:3,:));
 
 % Format properly
 A_c2m(1,:) = A_row1;
