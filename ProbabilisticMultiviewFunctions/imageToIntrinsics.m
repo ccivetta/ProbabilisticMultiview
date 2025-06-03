@@ -1,4 +1,4 @@
-function A_c2m_i = imageToIntrinsics(im,camaraParams,squareSize,boardSize)
+function A_c2m_i = imageToIntrinsics(im,cameraParams,squareSize,boardSize)
 % IMAGETOINTRINSICS estimates the intrinsic matrix from a single image.
 %
 %   A_c2m_i = imageToIntrinsics(im,camaraParams,squareSize)
@@ -19,7 +19,7 @@ function A_c2m_i = imageToIntrinsics(im,camaraParams,squareSize,boardSize)
 %% Check input(s)
 narginchk(3,4);
 
-if ~isa(camaraParams, 'cameraParameters')
+if ~isa(cameraParams, 'cameraParameters')
     error('Camera parameters must be provided.');
 end
 
@@ -40,7 +40,7 @@ end
 [imagePoints,boardSize_i] = detectCheckerboardPoints(im);
 
 % Undistort image points
-imagePoints = undistortPoints(imagePoints,camaraParams);
+imagePoints = undistortPoints(imagePoints,cameraParams);
 
 % Check for partial detection
 if ~isempty(boardSize)
