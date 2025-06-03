@@ -88,7 +88,7 @@ p_f(4,:) = 1;               % <-- Convert to homogeneous, 3D
 
 % Define p_c
 %H_c2f = invSE(H_f2c);
-p_c = H_c2f*p_f;
+p_c = H_f2c*p_f;
 
 %% Reproject points
 tilde_p_m = A_c2m*p_c(1:3,:);
