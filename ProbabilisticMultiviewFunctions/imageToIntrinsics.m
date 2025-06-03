@@ -39,6 +39,17 @@ end
 %                                         pixel position
 [imagePoints,boardSize_i] = detectCheckerboardPoints(im);
 
+% Keep only finite points
+tfIsFinite = isfinite(imagePoints(:,1));
+imagePoints = imagePoints(tfIsFinite,:);
+
+% Return if no finite points
+if isempty(imagePoints)
+    warning('No image points detected.');
+    A_c2m_i = [];
+    return
+end
+
 % Undistort image points
 imagePoints = undistortPoints(imagePoints,cameraParams);
 
@@ -65,6 +76,9 @@ end
 %                                   %     coordinate relative to the
 %                                   %     fiducial frame
 [worldPoints] = generateCheckerboardPoints(boardSize,squareSize);
+
+% Keep corresponding finite points
+worldPoints = worldPoints(tfIsFinite,:);
 
 % Recover the checkerboard pose relative to the camera frame (H_f2c)
 [R_c2f, tpose_d_f2c] = extrinsics(...
