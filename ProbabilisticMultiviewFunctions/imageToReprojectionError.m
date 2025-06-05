@@ -1,23 +1,25 @@
-function [err,dp_m] = imageToReprojectionError(im,cameraParams,squareSize,varargin)
+function [err,p_m,dp_m] = imageToReprojectionError(im,cameraParams,squareSize,varargin)
 % IMAGETOREPROJECTIONERROR calculates the reprojection error associated
 % with an image of a checkerboard fiducial given camera parameters, square
 % size, and (optionally) an intrinsic matrix.
 %
-%   [err,dp_m] = imageToReprojectionError(im,cameraParams,squareSize)
-%   [err,dp_m] = imageToReprojectionError(im,cameraParams,squareSize,boardSize)
-%   [err,dp_m] = imageToReprojectionError(im,cameraParams,squareSize,boardSize,A_c2m)
+%   [err,p_m,dp_m] = imageToReprojectionError(im,cameraParams,squareSize)
+%   ___ = imageToReprojectionError(im,cameraParams,squareSize,boardSize)
+%   ___ = imageToReprojectionError(im,cameraParams,squareSize,boardSize,A_c2m)
 %
 %   Input(s)
 %       im - image of checkerboard fiducial
 %       cameraParams - MATLAB camera parameters object
-%       squareSize - scalar defining the square size of the checkerboard in
-%                    linear units
-%       boardSize - [OPTIONAL] 1x2 array defining the board size (to ignore
-%       board size and use intrinsics use boardSize = [])
-%       A_c2m - 3x3 intrinsic matrix
+%         squareSize - scalar defining the square size of the checkerboard in
+%                      linear units
+%         boardSize - [OPTIONAL] 1x2 array defining the board size (to 
+%                     ignore board size and use intrinsics use 
+%                     boardSize = [])
+%             A_c2m - [OPTIONAL] 3x3 intrinsic matrix
 %
 %   Output(s)
-%       err - scalar defining average RMS reprojetion error
+%        err - scalar defining average RMS reprojetion error
+%        p_m - 2xN array defining x/y pixel locations
 %       dp_m - 2xN array defining individual pixel error
 %
 %   M. Kutzer, 02Jun2025, USNA
@@ -116,10 +118,14 @@ tilde_p_m = A_c2m*p_c(1:3,:);
 p_m = tilde_p_m(1:2,:)./tilde_p_m(3,:);
 
 %% Calculate error
+% Segmented image points
 p_m_star = imagePoints.';
-
+% Signed pixel error
 dp_m = p_m(1:2,:) - p_m_star(1:2,:);
-
+% SSD
 ssdp_m = sqrt( sum(dp_m.^2,1) );
-
+% Average SSD
 err = mean(ssdp_m);
+
+%% Package output(s)
+p_m = p_m_star(1:2,:);
