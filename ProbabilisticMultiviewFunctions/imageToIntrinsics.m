@@ -57,7 +57,7 @@ imagePoints = undistortPoints(imagePoints,cameraParams);
 if ~isempty(boardSize)
     if ~all(boardSize == boardSize_i,'all')
         warning('Partial detection: [%d,%d] detected, [%d,%d] expected.',...
-            boardSize_i,boardSize);
+            boardSize_i(1),boardSize_i(2),boardSize(1),boardSize(2));
         A_c2m_i = [];
         return
     end
